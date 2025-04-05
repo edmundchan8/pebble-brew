@@ -1,11 +1,11 @@
 #include "recipes.h"
 
-const int font = FONT_KEY_GOTHIC_28_BOLD;
+const char *font = FONT_KEY_GOTHIC_28_BOLD;
 
 TextLayer* get_french_press_text_layer(){
     
     // Create the text layer with a local text_layer variable
-    TextLayer *french_press_text_layer = text_layer_create(GRect(5, 15, 144, 50)); // Position and size of text layer
+    TextLayer *french_press_text_layer = text_layer_create(GRect(0, 15, 144, 50)); // Position and size of text layer
 
     // Set text and alignment
     text_layer_set_text(french_press_text_layer, "French Press");

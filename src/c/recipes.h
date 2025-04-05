@@ -11,4 +11,6 @@ TextLayer* get_hario_text_layer(); // get Hario V60 text
 
 TextLayer* get_aeropress_text_layer(); // get Hario V60 text
 
+TextLayer* start_french_press_recipe_text_layer(); // get French Press Recipe
+
 #endif

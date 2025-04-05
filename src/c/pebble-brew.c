@@ -1,20 +1,24 @@
 #include <pebble.h>
 #include "recipes.h"  // include the helper file for recipes
+#include "frenchpress.h"
 
 // #define FONT_KEY_GOTHIC_28 "RESOURCE_ID_GOTHIC_28"
 
 
 // Declare a window and a text layer
 static Window *s_main_window;
-static Window *s_recipe_window;
+// copy of french window obtains from frenchpress script
+static Window *s_french_window_copy;
+
+// Forward declarations for helper functions
+// static void pop_french();
+
+// static Window *s_recipe_window;
 static TextLayer *s_text_layer;
-static TextLayer *s_text_layer_two;
+// static TextLayer *s_text_layer_french;
 #define MAX_RECIPES 3
 static TextLayer *text_layer_array[MAX_RECIPES]; // create array of TextLayers
 static int s_selected_layer = 1; // this sets the highlight field to first recipe
-
-// Function prototype for click_config_provider
-static void click_config_provider(void *context);
 
 // changes the background of recipe selection
 static void update_selection(){
@@ -51,27 +55,12 @@ static void main_window_load(Window *window) {
   }
 }
 
-static void recipe_window(){
-  APP_LOG(APP_LOG_LEVEL_INFO, "recipe_window() was called!");
-
-  // create recipe window
-  s_recipe_window = window_create();
-
-  TextLayer *recipe_text_layer = text_layer_create(GRect(5, 15, 144, 50));
-  text_layer_set_text(recipe_text_layer, "Where recipe shows");
-  text_layer_set_text_alignment(recipe_text_layer, GTextAlignmentCenter);
-  text_layer_set_font(recipe_text_layer, fonts_get_system_font(FONT_KEY_GOTHIC_28));
-
-  layer_add_child(window_get_root_layer(s_recipe_window), text_layer_get_layer(recipe_text_layer));
-
-  // push to top of window stack
-  window_stack_push(s_recipe_window, true);
-}
-
 static void main_window_unload(Window *window){
   text_layer_destroy(s_text_layer);
-  text_layer_destroy(s_text_layer_two);
+  // text_layer_destroy(s_text_layer_french);
 }
+
+
 
 static void up_click_handler(ClickRecognizerRef recognizer, void *context){
   // Move selection up
@@ -86,7 +75,12 @@ static void down_click_handler(ClickRecognizerRef recognizer, void *context){
 }
 
 static void select_click_handler(ClickRecognizerRef recognizer, void *context){
-  recipe_window();
+  
+  // TODO here we should do a while loop, that gets the current s_selected_layer an uses that to determine which recipe to get  
+  // when select button clicked, get french press window from frenchpress.c
+  s_french_window_copy = push_french();
+  // push french press window to stack
+  window_stack_push(s_french_window_copy, true);
 }
 
 static void click_config_provider(void *context){
@@ -108,7 +102,6 @@ static void init() {
    // Set the click config provider - to manage click events
    window_set_click_config_provider(s_main_window, click_config_provider);
 
-
   // Show window
   window_stack_push(s_main_window, true);
 }
@@ -117,10 +110,8 @@ static void init() {
 static void deinit() {
   // Destory the main window
   window_destroy(s_main_window);
-  if (s_recipe_window){
-    window_destroy(s_recipe_window);
-    s_recipe_window = NULL;
-  }
+  window_destroy(s_french_window_copy);
+
 }
 
 // main function
